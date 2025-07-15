@@ -12,13 +12,8 @@ def work_log(task):
 
 if __name__ == '__main__':
     
-    work = []
-    task = ['A', 'B', 'C', 'D']
-    for i in range(4):
-        period = random.randint(1, 5)
-
-        work.append((task[i], period))
-
+    work = [('A', 5), ('B', 2), ('C', 1), ('D', 3)]
+    
     with mp.Pool(processes=2) as pool:
         pool.map(work_log, work)
 
