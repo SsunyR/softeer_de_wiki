@@ -4,7 +4,10 @@
     .
     ├── docker-compose.yaml
     ├── README.md
-    └── config/
+    ├── data
+    │   └── test.txt
+    └── config
+        ├── log4j.properties
         ├── core-site.xml
         ├── hdfs-site.xml
         └── mapred-site.xml

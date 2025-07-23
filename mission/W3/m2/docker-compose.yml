@@ -8,7 +8,6 @@ services:
     command: >
       bash -c "
         if [ ! -d /hadoop/dfs/name/current ]; then
-          echo 'Formatting NameNode...';
           hdfs namenode -format -force -nonInteractive;
         fi;
         hdfs namenode
@@ -18,6 +17,7 @@ services:
     volumes:
       - ./config:/opt/hadoop/etc/hadoop
       - namenode_data:/hadoop/dfs/name
+      - ./data:/opt/hadoop/local_data
     user: root
     ports:
       - "9870:9870"
@@ -52,6 +52,21 @@ services:
       - "9865:9864"
     depends_on:
       - namenode
+    
+  # datanode3:
+  #   image: apache/hadoop:3.4.1
+  #   platform: linux/amd64
+  #   hostname: datanode3
+  #   container_name: datanode3
+  #   user: root
+  #   command: [ "hdfs", "datanode" ]
+  #   volumes:
+  #     - ./config:/opt/hadoop/etc/hadoop
+  #     - datanode3_data:/hadoop/dfs/data
+  #   ports:
+  #     - "9866:9864"
+  #   depends_on:
+  #     - namenode
 
   resourcemanager:
     image: apache/hadoop:3.4.1
@@ -72,6 +87,7 @@ services:
       - namenode
       - datanode1
       - datanode2
+      # - datanode3
     
   nodemanager1:
     image: apache/hadoop:3.4.1
@@ -101,6 +117,20 @@ services:
     depends_on:
       - resourcemanager
   
+  # nodemanager3:
+  #   image: apache/hadoop:3.4.1
+  #   platform: linux/amd64
+  #   hostname: nodemanager2
+  #   container_name: nodemanager3
+  #   user: root
+  #   command: [ "yarn", "nodemanager"]
+  #   volumes:
+  #     - ./config:/opt/hadoop/etc/hadoop
+  #   ports:
+  #     - "8044:8042"
+  #   depends_on:
+  #     - resourcemanager
+  
   historyserver:
     image: apache/hadoop:3.4.1
     platform: linux/amd64
@@ -118,9 +148,11 @@ services:
       - namenode
       - datanode1
       - datanode2
+      # - datanode3
       - resourcemanager
 
 volumes:
   namenode_data:
   datanode1_data:
   datanode2_data:
+  # datanode3_data:
