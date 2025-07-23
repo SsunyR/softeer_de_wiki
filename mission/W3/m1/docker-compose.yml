@@ -21,7 +21,7 @@ services:
     user: root
     ports:
       - "9870:9870"
-      - "9820:9820"
+      - "9000:9000"
   
   datanode:
     image: apache/hadoop:3.4.1

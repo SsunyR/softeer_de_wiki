@@ -3,7 +3,7 @@
 <configuration>
     <property>
         <name>dfs.replication</name>
-        <value>2</value>
+        <value>1</value>
     </property>
     <property>
         <name>dfs.namenode.name.dir</name>
@@ -20,11 +20,5 @@
     <property>
         <name>dfs.datanode.use.datanode.hostname</name>
         <value>true</value>
-    </property>
-
-<!-- Override the address DataNodes will use for WebHDFS redirect responses -->
-    <property>
-        <name>dfs.datanode.hostname</name>
-        <value>localhost</value> <!-- or your host IP if not localhost -->
     </property>
 </configuration>

@@ -130,26 +130,6 @@ services:
   #     - "8044:8042"
   #   depends_on:
   #     - resourcemanager
-  
-  historyserver:
-    image: apache/hadoop:3.4.1
-    platform: linux/amd64
-    hostname: historyserver
-    container_name: historyserver
-    user: root
-    command: [ "mapred", "historyserver"]
-    volumes:
-      - ./config:/opt/hadoop/etc/hadoop
-    ports:
-      - "8188:8188"
-      - "19888:19888"
-      - "10020:10020"
-    depends_on:
-      - namenode
-      - datanode1
-      - datanode2
-      # - datanode3
-      - resourcemanager
 
 volumes:
   namenode_data:
