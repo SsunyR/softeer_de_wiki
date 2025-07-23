@@ -1,0 +1,43 @@
+services:
+  namenode:
+    image: apache/hadoop:3.4.1
+    platform: linux/amd64
+    hostname: namenode
+    container_name: namenode
+    privileged: true
+    command: >
+      bash -c "
+        if [ ! -d /hadoop/dfs/name/current ]; then
+          hdfs namenode -format -force -nonInteractive;
+        fi;
+        hdfs namenode
+      "
+    environment:
+      - HDFS_NAMENODE_USER=root
+    volumes:
+      - ./config:/opt/hadoop/etc/hadoop
+      - namenode_data:/hadoop/dfs/name
+      - ./data:/opt/hadoop/local_data
+    user: root
+    ports:
+      - "9870:9870"
+      - "9820:9820"
+  
+  datanode:
+    image: apache/hadoop:3.4.1
+    platform: linux/amd64
+    hostname: datanode
+    container_name: datanode
+    user: root
+    command: [ "hdfs", "datanode" ]
+    volumes:
+      - ./config:/opt/hadoop/etc/hadoop
+      - datanode_data:/hadoop/dfs/data
+    ports:
+      - "9864:9864"
+    depends_on:
+      - namenode
+
+volumes:
+  namenode_data:
+  datanode_data:
