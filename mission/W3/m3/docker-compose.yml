@@ -1,6 +1,7 @@
 services:
   namenode:
     build: .
+    image: hadoop-python
     platform: linux/amd64
     hostname: namenode
     container_name: namenode
@@ -37,7 +38,7 @@ services:
       - "8088:8088"
   
   datanode1:
-    build: .
+    image: hadoop-python
     platform: linux/amd64
     hostname: datanode1
     container_name: datanode1
@@ -52,7 +53,7 @@ services:
       - namenode
     
   datanode2:
-    build: .
+    image: hadoop-python
     platform: linux/amd64
     hostname: datanode2
     container_name: datanode2
@@ -67,7 +68,7 @@ services:
       - namenode
 
   nodemanager1:
-    build: .
+    image: hadoop-python
     platform: linux/amd64
     hostname: nodemanager1
     container_name: nodemanager1
@@ -81,7 +82,7 @@ services:
       - namenode
   
   nodemanager2:
-    build: .
+    image: hadoop-python
     platform: linux/amd64
     hostname: nodemanager2
     container_name: nodemanager2

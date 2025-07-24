@@ -1,5 +1,6 @@
 services:
   namenode:
+    build: .
     image: hadoop-python
     platform: linux/amd64
     hostname: namenode
@@ -65,21 +66,6 @@ services:
       - "9865:9864"
     depends_on:
       - namenode
-    
-  # datanode3:
-  #   image: hadoop-python
-  #   platform: linux/amd64
-  #   hostname: datanode3
-  #   container_name: datanode3
-  #   user: root
-  #   command: [ "/usr/sbin/sshd", "-D" ]
-  #   volumes:
-  #     - ./config:/opt/hadoop/etc/hadoop
-  #     - datanode3_data:/hadoop/dfs/data
-  #   ports:
-  #     - "9866:9864"
-  #   depends_on:
-  #     - namenode
 
   nodemanager1:
     image: hadoop-python
@@ -108,23 +94,8 @@ services:
       - "8043:8042"
     depends_on:
       - namenode
-  
-  # nodemanager3:
-  #   image: hadoop-python
-  #   platform: linux/amd64
-  #   hostname: nodemanager3
-  #   container_name: nodemanager3
-  #   user: root
-  #   command: [ "/usr/sbin/sshd", "-D" ]
-  #   volumes:
-  #     - ./config:/opt/hadoop/etc/hadoop
-  #   ports:
-  #     - "8044:8042"
-  #   depends_on:
-  #     - namenode
 
 volumes:
   namenode_data:
   datanode1_data:
   datanode2_data:
-  # datanode3_data:
