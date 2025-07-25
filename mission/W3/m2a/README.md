@@ -46,14 +46,19 @@
 
 9. 아래 명령어를 통해 업로드한 파일의 mapreduce 작업 수행.
 
-        # hadoop jar /opt/hadoop/share/hadoop/mapreduce/hadoop-mapreduce-examples-3.3.6.jar wordcount /temp/test.txt /output
+        # hadoop jar /opt/hadoop/share/hadoop/mapreduce/hadoop-mapreduce-examples-3.4.1.jar wordcount \
+        /temp/test.txt /output
 
 10. http://localhost:8088/ 에서 실행한 작업의 정보 확인.
 
-11. 아래 명령어를 통해 실행한 mapreduce 결과 확인.
+11. 아래 명령어를 통해 작업을 통해 생성된 결과 파일 확인.
+
+        # hsfs dfs -ls /output
+
+12. 아래 명령어를 통해 실행한 mapreduce 결과 확인.
 
         # hdfs dfs -cat /output/part-r-00000
 
-12. Ctrl+D로 namenode 컨테이너에서 빠져나와 아래 명령어 통해 하둡 클러스터 종료 및 볼륨 정보 지우기.
+13. Ctrl+D로 namenode 컨테이너에서 빠져나와 아래 명령어 통해 하둡 클러스터 종료 및 볼륨 정보 지우기.
 
         $ docker-compose down -v

@@ -7,8 +7,7 @@
         ├── Dockerfile
         ├── README.md
         ├── data
-        │   ├── ebook
-        │   │   └── MobyDick.txt
+        │   ├── tweet.csv
         │   ├── reducer.py
         │   └── mapper.py
         └── config
@@ -37,28 +36,27 @@
 
 4. http://localhost:9870/ 에서 하둡 클러스터의 상태를 Web UI로 확인.
 
-5. 아래와 같은 명령어를 통해 hdfs에 book 디렉토리를 만들고 확인.
+5. 아래와 같은 명령어를 통해 hdfs에 tweet 디렉토리를 만들고 확인.
 
-        # hdfs dfs -mkdir /book
+        # hdfs dfs -mkdir /tweet
         
         # hdfs dfs -ls /
 
 6. 아래 명령어를 통해 로컬 데이터를 하둡 클러스터에 업로드.
 
-        # hdfs dfs -put local_data/ebook/MobyDick.txt /book
+        # hdfs dfs -put local_data/tweet.csv /tweet
 
 7. 아래 명령어를 통해 클러스터에 업로드한 파일의 상태를 확인.
 
-        # hdfs dfs -ls /book
+        # hdfs dfs -ls /tweet
 
 8. 아래 명령어를 통해 업로드한 파일의 mapreduce 작업 수행.
 
-        # mapred streaming 
-                -files /opt/hadoop/local_data/mapper.py, /opt/hadoop/local_data/reducer.py
-                -input /book/MobyDick.txt \
+        # mapred streaming -files /opt/hadoop/local_data/mapper.py,/opt/hadoop/local_data/reducer.py \
+                -input /tweet/tweet.csv \
                 -output /output \
                 -mapper mapper.py \
-                -reducer reducer.py \
+                -reducer reducer.py
 
 9. http://localhost:8088/ 에서 실행한 작업의 정보 확인.
 

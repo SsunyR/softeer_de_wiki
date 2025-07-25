@@ -1,0 +1,1 @@
+mapred streaming -files /opt/hadoop/local_data/mapper.py,/opt/hadoop/local_data/reducer.py -input /tweet/tweet.csv -output /output -mapper mapper.py -reducer reducer.py
