@@ -20,8 +20,6 @@
             └── workers
     ```
 
-- ebook from Project Gutenberg: https://www.gutenberg.org/
-
 1. 아래 명령어를 통해 Hadoop cluster를 실행.
 
         $ docker-compose up -d
