@@ -7,7 +7,8 @@
         ├── Dockerfile
         ├── README.md
         ├── data
-        │   ├── MobyDick.txt
+        │   ├── example
+        │   │   └── MobyDick.txt
         │   ├── reducer.py
         │   └── mapper.py
         └── config
@@ -19,6 +20,8 @@
             ├── yarn-site.xml
             └── workers
     ```
+
+- ebook from Project Gutenberg: https://www.gutenberg.org/
 
 1. 아래 명령어를 통해 Hadoop cluster를 실행.
 
@@ -34,30 +37,35 @@
 
 4. http://localhost:9870/ 에서 하둡 클러스터의 상태를 Web UI로 확인.
 
-. 아래와 같은 명령어를 통해 하둡 명령어의 동작 확인.
+5. 아래와 같은 명령어를 통해 hdfs에 book 디렉토리를 만들고 확인.
 
-        # hdfs dfs -mkdir temp
+        # hdfs dfs -mkdir /book
         
         # hdfs dfs -ls /
 
-. 아래 명령어를 통해 로컬 데이터를 하둡 클러스터에 업로드.
+6. 아래 명령어를 통해 로컬 데이터를 하둡 클러스터에 업로드.
 
-        # hdfs dfs -put local_data/test.txt /temp
+        # hdfs dfs -put local_data/ebook/MobyDick.txt /book
 
-. 아래 명령어를 통해 클러스터에 업로드한 파일의 복제 상태를 확인.
+7. 아래 명령어를 통해 클러스터에 업로드한 파일의 상태를 확인.
 
-        # hdfs fsck /temp/test.txt -files -blocks -locations
+        # hdfs dfs -ls /book
 
-. 아래 명령어를 통해 업로드한 파일의 mapreduce 작업 수행.
+8. 아래 명령어를 통해 업로드한 파일의 mapreduce 작업 수행.
 
-        # hadoop jar /opt/hadoop/share/hadoop/mapreduce/hadoop-mapreduce-examples-3.3.6.jar wordcount /temp/test.txt /output
+        # mapred streaming 
+                -files /opt/hadoop/local_data/mapper.py, /opt/hadoop/local_data/reducer.py
+                -input /book/MobyDick.txt \
+                -output /output \
+                -mapper mapper.py \
+                -reducer reducer.py \
 
-10. http://localhost:8088/ 에서 실행한 작업의 정보 확인.
+9. http://localhost:8088/ 에서 실행한 작업의 정보 확인.
 
-11. 아래 명령어를 통해 실행한 mapreduce 결과 확인.
+10. 아래 명령어를 통해 실행한 mapreduce 결과 확인. (space bar로 넘기며 확인, q를 통해 종료)
 
-        # hdfs dfs -cat /output/part-r-00000
+        # hdfs dfs -cat /output/part-00000 | more
 
-12. Ctrl+D로 namenode 컨테이너에서 빠져나와 아래 명령어 통해 하둡 클러스터 종료 및 볼륨 정보 지우기.
+11. Ctrl+D로 namenode 컨테이너에서 빠져나와 아래 명령어 통해 하둡 클러스터 종료 및 볼륨 정보 지우기.
 
         $ docker-compose down -v
