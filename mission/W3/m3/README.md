@@ -25,7 +25,7 @@
 
 1. 아래 명령어를 통해 Hadoop cluster를 실행.
 
-        $ docker-compose up -d
+        $ docker-compose up --build -d
 
 2. 아래 명령어를 통해 모든 컨테이너가 실행 중인지 확인.
 
