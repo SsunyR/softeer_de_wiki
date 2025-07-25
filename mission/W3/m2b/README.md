@@ -1,4 +1,4 @@
-## W3M2 실행
+## W3M2b 실행
 
 1. 디렉토리 구조
     ```
@@ -19,7 +19,7 @@
 
 2. 아래 명령어를 통해 Hadoop multi-node cluster를 실행.
 
-        $ docker-compose up -d
+        $ docker-compose up --build -d
 
 3. 아래 명령어를 통해 모든 컨테이너가 실행 중인지 확인.
 
