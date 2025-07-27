@@ -14,7 +14,12 @@
             ├── core-site.xml
             ├── hdfs-site.xml
             ├── mapred-site.xml
-            └── yarn-site.xml
+            ├── yarn-site.xml
+            └── backup
+                ├── core-site.backup.xml
+                ├── hdfs-site.backup.xml
+                ├── mapred-site.backup.xml
+                └── yarn-site.backup.xml
     ```
 
 2. 아래 명령어를 통해 Hadoop multi-node cluster를 실행.
@@ -33,6 +38,18 @@
 
 6. 아래와 같은 명령어를 통해 하둡 명령어의 동작 확인.
 
-        # hdfs dfs -mkdir temp
+        # hdfs dfs -mkdir /test
         
         # hdfs dfs -ls /
+
+7. 아래와 같은 명령어를 통해 configuration 변경 스크립트 실행.
+
+        # python3 local_data/modification.py
+
+8. 아래와 같은 명령어를 통해 verification 스크립트 실행.
+
+        # python3 local_data/verification.py
+
+9. Ctrl+D로 namenode 컨테이너에서 빠져나와 아래 명령어 통해 하둡 클러스터 종료 및 볼륨 정보 지우기.
+
+        $ docker-compose down -v

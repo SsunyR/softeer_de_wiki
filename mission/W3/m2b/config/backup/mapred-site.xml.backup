@@ -21,8 +21,4 @@
     <name>mapreduce.jobhistory.address</name>
     <value>namenode:10020</value>
   </property>
-  <property>
-    <name>mapreduce.task.io.sort.mb</name>
-    <value>256</value>
-  </property>
 </configuration>

@@ -3,22 +3,10 @@
 <configuration>
   <property>
     <name>fs.defaultFS</name>
-    <value>hdfs://localhost:9000</value>
+    <value>hdfs://namenode:9000</value>
   </property>
   <property>
     <name>hadoop.tmp.dir</name>
     <value>/tmp/hadoop</value>
-  </property>
-  <property>
-    <name>yarn.nodemanager.aux-services</name>
-    <value>mapreduce_shuffle</value>
-  </property>
-  <property>
-    <name>yarn.nodemanager.aux-services.mapreduce.shuffle.class</name>
-    <value>org.apache.hadoop.mapred.ShuffleHandler</value>
-  </property>
-  <property>
-    <name>io.file.buffer.size</name>
-    <value>131072</value>
   </property>
 </configuration>

@@ -10,14 +10,6 @@
     <value>/tmp/hadoop</value>
   </property>
   <property>
-    <name>yarn.nodemanager.aux-services</name>
-    <value>mapreduce_shuffle</value>
-  </property>
-  <property>
-    <name>yarn.nodemanager.aux-services.mapreduce.shuffle.class</name>
-    <value>org.apache.hadoop.mapred.ShuffleHandler</value>
-  </property>
-  <property>
     <name>io.file.buffer.size</name>
     <value>131072</value>
   </property>

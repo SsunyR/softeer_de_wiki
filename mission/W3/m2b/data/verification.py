@@ -95,8 +95,14 @@ def delete_test_file():
 
 
 def check_replication_factor_by_test_file():
-    if create_dir_on_hdfs():
+    message = create_dir_on_hdfs()
+    if not message:
+        pass
+    elif message.startswith("mkdir"):
+        pass
+    else:
         print("FAIL: Could not create directory on hdfs")
+        return
     
     if not create_local_test_file():
         print("FAIL: Could not create local test file")
