@@ -29,6 +29,5 @@ filtered_df = df.filter(df["City"] == "New York")
 print("\nFiltered DataFrame (City = 'New York'):")
 filtered_df.show()
 
-
 # 6. Stop the SparkSession
 spark.stop()
