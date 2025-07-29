@@ -85,7 +85,7 @@
 
 8. 아래와 같은 명령어를 통해 spark 작업으로 생성된 파일 확인.
 
-        spark$ cat local/csv/part*.csv
+        spark$ cat local/csv/wordcount_output.csv
 
 9. Ctrl+D로 master-node 컨테이너에서 빠져나와 아래 명령어 통해 spark 클러스터 종료.
 
