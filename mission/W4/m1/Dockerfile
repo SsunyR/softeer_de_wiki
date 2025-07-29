@@ -12,4 +12,6 @@ RUN pip install pyspark pandas
 
 WORKDIR /opt/spark
 
+ENV PATH="/opt/spark/bin:$PATH"
+
 USER spark
