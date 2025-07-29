@@ -16,7 +16,7 @@ services:
       tail -f /dev/null;
       "
     volumes:
-      - ./data:/opt/spark/local
+      - ./shared:/opt/spark/local
       - ./conf:/opt/spark/conf
       - ./logs/master:/opt/spark/logs
 
@@ -37,7 +37,7 @@ services:
     depends_on:
       - spark-master
     volumes:
-      - ./data:/opt/spark/local
+      - ./shared:/opt/spark/local
       - ./logs/worker1:/opt/spark/logs
 
   spark-worker-2:
@@ -57,5 +57,5 @@ services:
     depends_on:
       - spark-master
     volumes:
-      - ./data:/opt/spark/local
+      - ./shared:/opt/spark/local
       - ./logs/worker2:/opt/spark/logs
