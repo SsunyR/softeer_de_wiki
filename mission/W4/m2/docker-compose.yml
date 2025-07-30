@@ -1,0 +1,61 @@
+version: '3'
+
+services:
+  spark-master:
+    build: .
+    image: my-spark
+    container_name: spark-master
+    hostname: spark-master
+    working_dir: /opt/spark
+    ports:
+      - "8080:8080"
+      - "7077:7077"
+    command: >
+      bash -c "
+      /opt/spark/sbin/start-master.sh;
+      tail -f /dev/null;
+      "
+    volumes:
+      - ./shared:/opt/spark/local
+      - ./conf:/opt/spark/conf
+      - ./logs/master:/opt/spark/logs
+
+  spark-worker-1:
+    image: my-spark
+    container_name: spark-worker-1
+    hostname: spark-worker-1
+    ports:
+      - "8081:8081"
+    environment:
+      - SPARK_WORKER_CORES=2
+      - SPARK_WORKER_MEMORY=4g
+    command: >
+      bash -c "
+      /opt/spark/sbin/start-worker.sh spark://spark-master:7077;
+      tail -f /dev/null;
+      "
+    depends_on:
+      - spark-master
+    volumes:
+      - ./shared:/opt/spark/local
+      - ./logs/worker1:/opt/spark/logs
+
+  spark-worker-2:
+    image: my-spark
+    container_name: spark-worker-2
+    hostname: spark-worker-2
+    ports:
+      - "8082:8081"
+    environment:
+      - SPARK_WORKER_CORES=2
+      - SPARK_WORKER_MEMORY=4g
+    command: >
+      bash -c "
+      /opt/spark/sbin/start-worker.sh spark://spark-master:7077;
+      tail -f /dev/null;
+      "
+    depends_on:
+      - spark-master
+    volumes:
+      - ./shared:/opt/spark/local
+      - ./logs/worker2:/opt/spark/logs
