@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y sudo wget && \
 RUN usermod -aG sudo spark && \
     echo "spark ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
-RUN pip install pyspark pandas
+RUN pip install pyspark pandas pyarrow matplotlib seaborn
 
 WORKDIR /opt/spark
 

@@ -3,6 +3,7 @@ from pyspark.sql.functions import col, count, mean, round, unix_timestamp, expr,
 from pyspark.sql.functions import year, month, dayofmonth, hour
 import os
 import glob
+import sys
 
 # Initialize Spark session
 spark = SparkSession.builder \
@@ -11,9 +12,20 @@ spark = SparkSession.builder \
 
 spark.sparkContext.setLogLevel("ERROR")
 
-SPARK_HOME = "/opt/spark/"
+# Check for test mode
+is_test_mode = '--test' in sys.argv
 
-FILE_NAME_HEADER = SPARK_HOME + "local/data/fhv_tripdata_2024_1278/fhvhv_tripdata_2024-"
+# 스크립트의 위치를 기준으로 데이터 디렉토리 경로를 동적으로 설정
+# /.../local/scripts/ -> /.../local/
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+INPUT_DATA_PATH = os.path.join(BASE_DIR, 'data')
+OUTPUT_DATA_PATH = os.path.join(BASE_DIR, 'test_data') if is_test_mode else INPUT_DATA_PATH
+
+# Create output directory if it doesn't exist
+if is_test_mode:
+    os.makedirs(os.path.join(OUTPUT_DATA_PATH, "parquet"), exist_ok=True)
+
+FILE_NAME_HEADER = os.path.join(INPUT_DATA_PATH, "fhv_tripdata_2024_1278/fhvhv_tripdata_2024-")
 months = ['01', '01', '07', '08']
 df = None
 
@@ -27,6 +39,11 @@ for m in months:
         df = df.union(new_df)
 
 del new_df
+
+# If in test mode, sample the data
+if is_test_mode:
+    print("Running in TEST MODE: Sampling data to 0.1%")
+    df = df.sample(withReplacement=False, fraction=0.001, seed=42)
 
 # 불필요한 열 제거
 
@@ -49,11 +66,11 @@ metrics_df.coalesce(1) \
     .write \
     .format("parquet") \
     .mode("overwrite") \
-    .save(SPARK_HOME + "local/data/parquet/metrics")
+    .save(os.path.join(OUTPUT_DATA_PATH, "parquet/metrics"))
 
 # File rename
-file_path = glob.glob(SPARK_HOME + "local/data/parquet/metrics/part-00000-*.parquet")[0]
-os.rename(file_path, SPARK_HOME + "local/data/parquet/metrics/pd_metrics.parquet")
+file_path = glob.glob(os.path.join(OUTPUT_DATA_PATH, "parquet/metrics/part-00000-*.parquet"))[0]
+os.rename(file_path, os.path.join(OUTPUT_DATA_PATH, "parquet/metrics/pd_metrics.parquet"))
 
 
 # 시간 조건 필터링
@@ -115,7 +132,7 @@ df_with_date = df_with_date.withColumn(
 del df_clean
 
 taxi_zone = spark.read.option("header", True).csv(
-    SPARK_HOME + "local/data/taxi_zone_lookup.csv"
+    os.path.join(INPUT_DATA_PATH, "taxi_zone_lookup.csv")
 )
 
 # 1. PULocationID에 대한 join
@@ -155,7 +172,7 @@ df_zone = df_with_do.drop("PULocationID", "DOLocationID", "LocationID")
 del df_with_date, df_with_pu, df_with_do
 
 # 날씨 데이터 로드
-weather_path_header = SPARK_HOME + "local/data/2024_weather/"
+weather_path_header = os.path.join(INPUT_DATA_PATH, "2024_weather/")
 weather_df = spark.read.option("header", True).csv(weather_path_header + "*.csv")
 
 
@@ -200,12 +217,12 @@ peak_hours.coalesce(1) \
   .write \
   .format("parquet") \
   .mode("overwrite") \
-  .save(SPARK_HOME + "local/data/parquet/peak_hours")
+  .save(os.path.join(OUTPUT_DATA_PATH, "parquet/peak_hours"))
 
 import os
 import glob
-file_path = glob.glob(SPARK_HOME + "local/data/parquet/peak_hours/part-00000-*.parquet")[0]
-os.rename(file_path, SPARK_HOME + "local/data/parquet/peak_hours/pd_peak_hours.parquet")
+file_path = glob.glob(os.path.join(OUTPUT_DATA_PATH, "parquet/peak_hours/part-00000-*.parquet"))[0]
+os.rename(file_path, os.path.join(OUTPUT_DATA_PATH, "parquet/peak_hours/pd_peak_hours.parquet"))
 
 # 
 # 온도 카테고리
@@ -238,11 +255,11 @@ df_final.coalesce(1) \
   .write \
   .format("parquet") \
   .mode("overwrite") \
-  .save(SPARK_HOME + "local/data/parquet/pd_final_data")
+  .save(os.path.join(OUTPUT_DATA_PATH, "parquet/pd_final_data"))
 
 # File rename
-file_path = glob.glob(SPARK_HOME + "local/data/parquet/pd_final_data/part-00000-*.parquet")[0]
-os.rename(file_path, SPARK_HOME + "local/data/parquet/pd_final_data/pd_final_data.parquet")
+file_path = glob.glob(os.path.join(OUTPUT_DATA_PATH, "parquet/pd_final_data/part-00000-*.parquet"))[0]
+os.rename(file_path, os.path.join(OUTPUT_DATA_PATH, "parquet/pd_final_data/pd_final_data.parquet"))
 
 # 날씨 카테고리별 택시 이용자 수, 요금, 이동 시간 분석
 weather_analysis = df_final.groupBy("temp_category", "weather_category").agg(
@@ -256,10 +273,10 @@ weather_analysis.coalesce(1) \
   .write \
   .format("parquet") \
   .mode("overwrite") \
-  .save(SPARK_HOME + "local/data/parquet/weather_analysis")
+  .save(os.path.join(OUTPUT_DATA_PATH, "parquet/weather_analysis"))
 # File rename
-file_path = glob.glob(SPARK_HOME + "local/data/parquet/weather_analysis/part-00000-*.parquet")[0]
-os.rename(file_path, SPARK_HOME + "local/data/parquet/weather_analysis/pd_weather_analysis.parquet")
+file_path = glob.glob(os.path.join(OUTPUT_DATA_PATH, "parquet/weather_analysis/part-00000-*.parquet"))[0]
+os.rename(file_path, os.path.join(OUTPUT_DATA_PATH, "parquet/weather_analysis/pd_weather_analysis.parquet"))
 
 # 이동 거리 구간별 분석
 distance_bins = [0, 1, 2, 3, 4, 5, 10, 15, 20, 25, 30, float("inf")]
@@ -312,10 +329,10 @@ distance_analysis.coalesce(1) \
   .write \
   .format("parquet") \
   .mode("overwrite") \
-  .save(SPARK_HOME + "local/data/parquet/distance_analysis")
+  .save(os.path.join(OUTPUT_DATA_PATH, "parquet/distance_analysis"))
 # File rename
-file_path = glob.glob(SPARK_HOME + "local/data/parquet/distance_analysis/part-00000-*.parquet")[0]
-os.rename(file_path, SPARK_HOME + "local/data/parquet/distance_analysis/pd_distance_analysis.parquet")
+file_path = glob.glob(os.path.join(OUTPUT_DATA_PATH, "parquet/distance_analysis/part-00000-*.parquet"))[0]
+os.rename(file_path, os.path.join(OUTPUT_DATA_PATH, "parquet/distance_analysis/pd_distance_analysis.parquet"))
 
 # 탑승 지역과 하차 지역별 택시 이용자 수, 요금, 이동 시간 분석
 location_analysis = df_final.groupBy("PULocation", "DOLocation").agg(
@@ -330,10 +347,10 @@ location_analysis.coalesce(1) \
   .write \
   .format("parquet") \
   .mode("overwrite") \
-  .save(SPARK_HOME + "local/data/parquet/location_analysis")
+  .save(os.path.join(OUTPUT_DATA_PATH, "parquet/location_analysis"))
 # File rename
-file_path = glob.glob(SPARK_HOME + "local/data/parquet/location_analysis/part-00000-*.parquet")[0]
-os.rename(file_path, SPARK_HOME + "local/data/parquet/location_analysis/pd_location_analysis.parquet")
+file_path = glob.glob(os.path.join(OUTPUT_DATA_PATH, "parquet/location_analysis/part-00000-*.parquet"))[0]
+os.rename(file_path, os.path.join(OUTPUT_DATA_PATH, "parquet/location_analysis/pd_location_analysis.parquet"))
 
 
 # Stop the Spark session
