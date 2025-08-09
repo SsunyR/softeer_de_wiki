@@ -34,8 +34,7 @@ filtered_df = reduced_df.filter((col('base_passenger_fare') > 0))
 filtered_df = filtered_df.withColumn('date', to_date(col('request_datetime'), 'yyyy-MM-dd'))
 filtered_df = filtered_df.drop('request_datetime')
 
-# Select 2024 datas
-filtered_df = filtered_df.filter(year(col('request_datetime')) == 2024)
+filtered_df = filtered_df.filter(year(col('date')) == 2024).filter(month(col('date')) == 1)
 
 # 날씨 데이터 로드
 weather_path_header = os.path.join(INPUT_DATA_PATH, "2024_weather/")
