@@ -1,0 +1,25 @@
+incidentId	string	고유아이디
+incidenteTypeCd	string	돌발유형
+incidenteSubTypeCd	string	돌발 세부유형
+addressJibun	string	주소(지번)
+addressJibunCd	int	주소코드
+addressNew	string	도로명주소
+linkId	int	노드링크아이디
+locationDataX	double	x좌표
+locationDataY	double	y좌표
+locationTypeCd	string	지점,영역,구간 구분코드
+locationData	string	좌표정보
+incidenteTrafficCd	string	소통등급
+incidenteGradeCd	string	돌발등급
+incidentTitle	string	돌발제목
+incTrafficCode	string	돌발제목
+incidentRegionCd	string	돌발지역코드
+startDate	string	발생일
+endDate	string	종료일
+lane	string	차선
+roadName	string	도로명
+sourceCode	string	제보출처(OPER_SGUBUN)
+lineLinkId	string	전체링크아이디
+controlType	string	통제정보
+important	string	중요돌발여부
+updateDate	string	돌발갱신일시
